@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Circuito Seguro · Comercios</title>
+  <meta name="theme-color" content="#205c40" />
+  <style>
+    :root{
+      --bg:#f4f7f4;--panel:#ffffff;--ink:#173326;--muted:#66756d;--line:#dce6df;
+      --primary:#205c40;--primary-dark:#174831;--primary-soft:#eaf3ee;--accent:#ccff00;
+      --ok:#205c40;--warn:#a76508;--danger:#b83434;--shadow:0 14px 38px rgba(32,92,64,.10);--r:18px
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    button,input,textarea,select{font:inherit} button{cursor:pointer}.hidden{display:none!important}
+    .app{max-width:1180px;margin:auto;padding:18px}
+    .topbar{position:relative;overflow:hidden;background:linear-gradient(135deg,#205c40 0%,#174831 100%);color:#fff;border-radius:22px;padding:22px 24px;display:flex;align-items:center;justify-content:space-between;gap:18px;box-shadow:var(--shadow)}
+    .topbar:before{content:"";position:absolute;left:0;top:0;width:100%;height:5px;background:var(--accent)}
+    .brand .municipio{display:inline-flex;align-items:center;gap:7px;margin-bottom:6px;font-size:11px;font-weight:900;letter-spacing:.10em;text-transform:uppercase;color:#e8f4ed}
+    .brand .municipio:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px rgba(204,255,0,.12)}
+    .brand h1{margin:0;font-size:clamp(22px,3vw,31px);letter-spacing:-.02em}.brand p{margin:5px 0 0;color:#dbe9e1;font-size:13px}
+    .top-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap;justify-content:flex-end}.user-email{font-size:13px;color:#e6f1ea}
+    .role{padding:6px 10px;border-radius:999px;background:rgba(204,255,0,.15);border:1px solid rgba(204,255,0,.35);color:#f4ffd0;font-size:12px;font-weight:900}
+    .btn{border:0;border-radius:11px;padding:10px 13px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:7px;transition:.16s ease}
+    .btn:hover{transform:translateY(-1px)}.btn:disabled{opacity:.6;cursor:not-allowed;transform:none}.btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary-dark)}
+    .btn-soft{background:var(--primary-soft);color:var(--primary)}.btn-ok{background:#e8f5ed;color:#174831}.btn-warn{background:#fff3df;color:#8a5700}.btn-danger{background:#ffeded;color:#982d2d}.btn-ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.45)}
+    .grid-kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0}.kpi{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:17px;box-shadow:0 5px 18px rgba(32,92,64,.05);position:relative;overflow:hidden}.kpi:after{content:"";position:absolute;left:0;top:0;width:4px;height:100%;background:#205c40}.kpi .label{font-size:12px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.03em}.kpi .value{font-size:30px;font-weight:900;margin-top:4px;color:#205c40}
+    .progress-card,.panel,.employee-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);box-shadow:0 6px 22px rgba(32,92,64,.05)}
+    .progress-card{padding:15px 17px;margin-bottom:16px}.progress-head{display:flex;justify-content:space-between;gap:10px;margin-bottom:8px;font-size:14px}.track{height:12px;border-radius:999px;background:#e1ebe5;overflow:hidden}.bar{height:100%;width:0;background:linear-gradient(90deg,#205c40,#3f8c68 78%,#ccff00);transition:.25s}
+    .layout{display:grid;grid-template-columns:360px 1fr;gap:16px;align-items:start}.panel-head{padding:17px 17px 0}.panel-head h2{margin:0;font-size:18px;color:#205c40}.panel-head p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.45}
+    .form{padding:15px 17px 18px;display:grid;gap:12px}.field{display:grid;gap:6px}.field label{font-size:13px;font-weight:800}.field input,.field textarea,.field select{width:100%;border:1px solid #cbd9cf;border-radius:11px;padding:11px 12px;outline:none;background:#fff;color:var(--ink)}.field textarea{min-height:96px;resize:vertical}.field input:focus,.field textarea:focus,.field select:focus{border-color:#3f8c68;box-shadow:0 0 0 3px rgba(32,92,64,.12)}.hint{font-size:11px;color:#7a8b82;margin-top:-2px}.form-actions{display:grid;grid-template-columns:1fr auto;gap:8px}.form-actions .btn{min-height:44px}
+    .toolbar{padding:14px;display:grid;grid-template-columns:minmax(190px,1fr) 150px auto auto;gap:8px;border-bottom:1px solid var(--line);background:#fbfdfb;border-radius:18px 18px 0 0}.toolbar input,.toolbar select{border:1px solid #cbd9cf;border-radius:11px;padding:10px 11px;min-width:0;outline:none;background:#fff;color:var(--ink)}.toolbar input:focus,.toolbar select:focus{border-color:#3f8c68;box-shadow:0 0 0 3px rgba(32,92,64,.10)}
+    .list{padding:10px 13px 15px;display:grid;gap:9px}.empty{padding:42px 18px;text-align:center;color:var(--muted)}.row{border:1px solid var(--line);border-radius:14px;padding:13px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;background:#fff}.row:hover{border-color:#bdd0c3;box-shadow:0 5px 16px rgba(32,92,64,.05)}.row-title{font-size:16px;font-weight:900;color:#173f2c}.row-address{font-size:14px;color:#5b6e63;margin-top:3px}.row-observation{margin-top:8px;padding:8px 10px;border-radius:10px;background:#f6f8f6;color:#52655a;font-size:12px;line-height:1.45;white-space:pre-wrap}.meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.pill{font-size:11px;font-weight:800;padding:5px 8px;border-radius:999px;background:#eff4f1;color:#53645a}.pill.ok{background:#e6f3eb;color:#174831}.pill.pending{background:#fff1db;color:#855500}.row-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}.row-actions .btn{font-size:12px;padding:8px 9px}.sync{padding:0 14px 13px;color:var(--muted);font-size:12px}
+    .employee-shell{max-width:650px;margin:20px auto}.employee-card{overflow:hidden}.employee-hero{position:relative;padding:28px 24px 21px;background:linear-gradient(135deg,#eaf3ee,#fff)}.employee-hero:before{content:"";position:absolute;top:0;left:0;right:0;height:5px;background:var(--accent)}.employee-hero .municipio{font-size:11px;font-weight:900;letter-spacing:.09em;text-transform:uppercase;color:#3c6e53;margin-bottom:8px}.employee-hero h2{margin:0 0 7px;font-size:24px;color:#205c40}.employee-hero p{margin:0;color:var(--muted);font-size:14px;line-height:1.55}
+    .success-card{margin:0 20px 20px;padding:16px;border-radius:13px;background:#edf7f1;border:1px solid #c8e0d1}.success-card strong{display:block;color:#174831;margin-bottom:7px}.success-card .name{font-weight:900}.success-card .address{font-size:14px;color:#52655a;margin-top:2px}.success-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}.status-pill{display:inline-flex;align-items:center;padding:5px 9px;border-radius:999px;font-size:12px;font-weight:900;background:#fff3c4;color:#765b00;border:1px solid #ecd66f}.status-pill.visitado{background:#e8f6ed;color:#1d6a43;border-color:#b9dec7}.success-observation{font-size:13px;color:#52655a;margin-top:9px;line-height:1.45;white-space:pre-wrap}.privacy{margin:0 20px 20px;padding-top:14px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);line-height:1.5}
+    .login-wrap{min-height:100vh;display:grid;place-items:center;padding:20px;background:radial-gradient(circle at top,#dcebe2 0%,#f6f8f6 50%,#edf3ef 100%)}.login{position:relative;overflow:hidden;width:min(430px,100%);background:#fff;border:1px solid var(--line);border-radius:22px;padding:29px 25px 25px;box-shadow:var(--shadow)}.login:before{content:"";position:absolute;left:0;top:0;width:100%;height:6px;background:linear-gradient(90deg,#205c40 0 82%,#ccff00 82%)}.login .municipio{font-size:11px;font-weight:900;letter-spacing:.10em;text-transform:uppercase;color:#4e715e;margin-bottom:8px}.login h1{margin:0 0 7px;font-size:27px;color:#205c40;letter-spacing:-.02em}.login p{margin:0 0 19px;color:var(--muted);font-size:14px}.login .form{padding:0}.error{background:#ffefef;color:#983030;padding:10px 12px;border-radius:10px;font-size:13px}.small{font-size:12px;color:var(--muted);line-height:1.45}.toast{position:fixed;right:17px;bottom:17px;max-width:min(420px,calc(100vw - 34px));padding:12px 14px;border-radius:12px;background:#205c40;color:#fff;box-shadow:var(--shadow);z-index:1000;font-size:14px;border-left:4px solid #ccff00}
+    @media(max-width:980px){.layout{grid-template-columns:1fr}.grid-kpi{grid-template-columns:repeat(2,1fr)}.topbar{align-items:flex-start;flex-direction:column}.top-actions{justify-content:flex-start}.toolbar{grid-template-columns:1fr 160px 1fr 1fr}.toolbar input{grid-column:1/-1}}
+    @media(max-width:600px){.app{padding:9px}.topbar{border-radius:16px;padding:19px 17px 17px}.grid-kpi{gap:8px;margin:10px 0}.kpi{padding:13px}.kpi .value{font-size:25px}.toolbar{grid-template-columns:1fr}.toolbar input{grid-column:auto}.row{grid-template-columns:1fr}.row-actions{justify-content:stretch}.row-actions .btn{flex:1}.form-actions{grid-template-columns:1fr}.panel,.employee-card{border-radius:15px}.employee-shell{margin:10px auto}.employee-hero{padding:24px 18px 18px}.form{padding:16px}.success-card,.privacy{margin-left:16px;margin-right:16px}}
+  </style>
+</head>
+<body>
+  <section id="loginView" class="login-wrap">
+    <div class="login">
+      <div class="municipio">Municipalidad de San Isidro</div>
+      <h1>Circuito Seguro</h1>
+      <p>Ingresá con el usuario asignado para registrar comercios.</p>
+      <form id="loginForm" class="form">
+        <div class="field"><label for="email">Correo electrónico</label><input id="email" type="email" autocomplete="email" required placeholder="usuario@ejemplo.com"></div>
+        <div class="field"><label for="password">Contraseña</label><input id="password" type="password" autocomplete="current-password" required placeholder="••••••••"></div>
+        <div id="loginError" class="error hidden"></div>
+        <button class="btn btn-primary" type="submit">Ingresar</button>
+      </form>
+      <p class="small" style="margin-top:14px">Los accesos son creados por el administrador.</p>
+    </div>
+  </section>
+
+  <main id="appView" class="app hidden">
+    <header class="topbar">
+      <div class="brand"><div class="municipio">Municipalidad de San Isidro</div><h1>Circuito Seguro · Comercios</h1><p>Registro compartido del equipo</p></div>
+      <div class="top-actions"><span id="roleLabel" class="role"></span><span id="userEmail" class="user-email"></span><button id="logoutBtn" class="btn btn-ghost" type="button">Salir</button></div>
+    </header>
+
+    <section id="adminView" class="hidden">
+      <section class="grid-kpi">
+        <div class="kpi"><div class="label">Total cargados</div><div id="kpiTotal" class="value">0</div></div>
+        <div class="kpi"><div class="label">Visitados</div><div id="kpiVisited" class="value">0</div></div>
+        <div class="kpi"><div class="label">Pendientes</div><div id="kpiPending" class="value">0</div></div>
+        <div class="kpi"><div class="label">Avance</div><div id="kpiPercent" class="value">0%</div></div>
+      </section>
+      <section class="progress-card"><div class="progress-head"><strong>Progreso general</strong><span id="progressText">0 de 0</span></div><div class="track"><div id="progressBar" class="bar"></div></div></section>
+
+      <section class="layout">
+        <aside class="panel">
+          <div class="panel-head"><h2 id="adminFormTitle">Agregar comercio</h2><p>Como administrador podés cargar, corregir, cambiar el estado y eliminar registros.</p></div>
+          <form id="adminForm" class="form">
+            <input id="editId" type="hidden">
+            <div class="field"><label for="adminName">Nombre del comercio *</label><input id="adminName" required maxlength="120" placeholder="Ej.: Kiosco San Martín"></div>
+            <div class="field"><label for="adminAddress">Dirección *</label><input id="adminAddress" required maxlength="180" placeholder="Ej.: Av. Centenario 2314"></div>
+            <div class="field"><label for="adminStatus">Estado *</label><select id="adminStatus" required><option value="pendiente">Pendiente</option><option value="visitado">Visitado</option></select></div>
+            <div class="field"><label for="adminObservations">Observaciones</label><textarea id="adminObservations" maxlength="500" placeholder="Ej.: Volver por la tarde / comercio cerrado / hablar con el dueño"></textarea></div>
+            <div class="form-actions"><button id="adminSaveBtn" class="btn btn-primary" type="submit">Guardar comercio</button><button id="cancelEditBtn" class="btn btn-soft hidden" type="button">Cancelar</button></div>
+          </form>
+        </aside>
+
+        <section class="panel">
+          <div class="toolbar">
+            <input id="search" type="search" placeholder="Buscar comercio, dirección u observación…">
+            <select id="filterStatus" aria-label="Filtrar por estado"><option value="todos">Todos</option><option value="pendiente">Pendientes</option><option value="visitado">Visitados</option></select>
+            <button id="exportBtn" class="btn btn-soft" type="button">⬇ Excel</button>
+            <button id="backupBtn" class="btn btn-soft" type="button">↻ Backup</button>
+          </div>
+          <div id="list" class="list"></div><div id="syncStatus" class="sync">Conectando con Firebase…</div>
+        </section>
+      </section>
+    </section>
+
+    <section id="employeeView" class="employee-shell hidden">
+      <div class="employee-card">
+        <div class="employee-hero">
+          <div class="municipio">Municipalidad de San Isidro</div>
+          <h2>Agregar comercio</h2>
+          <p>Ingresá los datos del comercio, agregá una observación si hace falta y marcá el estado de la visita.</p>
+        </div>
+        <form id="employeeForm" class="form">
+          <div class="field"><label for="employeeName">Nombre del comercio *</label><input id="employeeName" required maxlength="120" placeholder="Ej.: Farmacia Central"><div class="hint">Usá el nombre que figura en el frente del local.</div></div>
+          <div class="field"><label for="employeeAddress">Dirección *</label><input id="employeeAddress" required maxlength="180" placeholder="Ej.: Av. Centenario 1250"><div class="hint">Ingresá calle y altura para evitar registros duplicados.</div></div>
+          <div class="field"><label for="employeeStatus">Estado *</label><select id="employeeStatus" required><option value="pendiente" selected>Pendiente</option><option value="visitado">Visitado</option></select><div class="hint">Marcá “Visitado” si el comercio ya fue relevado.</div></div>
+          <div class="field"><label for="employeeObservations">Observaciones</label><textarea id="employeeObservations" maxlength="500" placeholder="Ej.: El encargado pidió volver por la tarde / comercio cerrado / consultar con el dueño"></textarea><div class="hint">Opcional. Podés dejar cualquier dato útil para el seguimiento.</div></div>
+          <button id="employeeSaveBtn" class="btn btn-primary" type="submit">Agregar comercio</button>
+        </form>
+        <div id="lastAdded" class="success-card hidden">
+          <strong>✓ Comercio agregado correctamente</strong>
+          <div id="lastAddedName" class="name"></div>
+          <div id="lastAddedAddress" class="address"></div>
+          <div class="success-meta"><span id="lastAddedStatus" class="status-pill">Pendiente</span></div>
+          <div id="lastAddedObservation" class="success-observation hidden"></div>
+        </div>
+        <div class="privacy">Como usuario del equipo podés agregar comercios. La edición, eliminación y visualización completa de la base quedan reservadas al administrador.</div>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+  <script type="module">
+    const firebaseConfig = {
+      apiKey: "AIzaSyDM1i_AET1YtYg-uHPGjorL48HXNKPNpl8",
+      authDomain: "circuito-seguro-si.firebaseapp.com",
+      projectId: "circuito-seguro-si",
+      storageBucket: "circuito-seguro-si.firebasestorage.app",
+      messagingSenderId: "257908449550",
+      appId: "1:257908449550:web:a7440fe47157dde9da775f",
+      measurementId: "G-7B1E0J7X74"
+    };
+
+    const ADMIN_UID = "eY4FTDtXcbYmb4RqxgzsVtyzHZ12";
+
+    // Cuando creemos el Google Sheet, pegaremos aquí la URL de Apps Script.
+    const GOOGLE_SHEETS_BACKUP_URL = "";
+
+    const FIREBASE_VERSION = "12.19.0";
+    const { initializeApp } = await import(`https://www.gstatic.com/firebasejs/${FIREBASE_VERSION}/firebase-app.js`);
+    const { getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, onSnapshot, serverTimestamp, query, orderBy } = await import(`https://www.gstatic.com/firebasejs/${FIREBASE_VERSION}/firebase-firestore.js`);
+    const { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } = await import(`https://www.gstatic.com/firebasejs/${FIREBASE_VERSION}/firebase-auth.js`);
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+    const commercesRef = collection(db, "comercios");
+    const $ = id => document.getElementById(id);
+    const state = { items: [], unsubscribe: null, isAdmin: false };
+
+    function toast(msg){const el=$("toast");el.textContent=msg;el.classList.remove("hidden");clearTimeout(window.__toast);window.__toast=setTimeout(()=>el.classList.add("hidden"),2800)}
+    function escapeHtml(v=""){return v.toString().replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]))}
+    function normalize(v){return (v||"").toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"")}
+    function fmtDate(ts){if(!ts)return"—";const d=ts?.toDate?ts.toDate():new Date(ts);return Number.isNaN(d.getTime())?"—":d.toLocaleString("es-AR",{dateStyle:"short",timeStyle:"short"})}
+    function statusLabel(status){return status==="visitado"?"Visitado":"Pendiente"}
+
+    async function mirrorToSheet(payload){
+      if(!GOOGLE_SHEETS_BACKUP_URL || !auth.currentUser)return;
+      try{
+        const idToken=await auth.currentUser.getIdToken();
+        await fetch(GOOGLE_SHEETS_BACKUP_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({...payload,idToken})});
+      }catch(e){console.warn("Backup Sheets",e)}
+    }
+
+    function backupRecord(id,item={}){
+      return {id,nombre:item.nombre||"",direccion:item.direccion||"",estado:item.estado||"pendiente",observaciones:item.observaciones||"",creadoPor:item.creadoPor||"",creadoPorUid:item.creadoPorUid||"",creadoEn:item.creadoEn||"",actualizadoEn:item.actualizadoEn||"",actualizadoPor:item.actualizadoPor||""};
+    }
+
+    function renderAdmin(){
+      const total=state.items.length, visited=state.items.filter(i=>i.estado==="visitado").length, pending=total-visited, percent=total?Math.round(visited/total*100):0;
+      $("kpiTotal").textContent=total;$("kpiVisited").textContent=visited;$("kpiPending").textContent=pending;$("kpiPercent").textContent=`${percent}%`;$("progressText").textContent=`${visited} de ${total}`;$("progressBar").style.width=`${percent}%`;
+      const text=normalize($("search").value.trim());
+      const filter=$("filterStatus").value;
+      const items=state.items.filter(i=>{
+        const matchesText=!text||normalize(i.nombre).includes(text)||normalize(i.direccion).includes(text)||normalize(i.observaciones).includes(text);
+        const matchesStatus=filter==="todos"||i.estado===filter;
+        return matchesText&&matchesStatus;
+      });
+      if(!items.length){$("list").innerHTML='<div class="empty">No hay comercios para mostrar.</div>';return}
+      $("list").innerHTML=items.map(i=>{const visited=i.estado==="visitado";return `<article class="row" data-id="${i.id}"><div><div class="row-title">${escapeHtml(i.nombre||"")}</div><div class="row-address">${escapeHtml(i.direccion||"")}</div>${i.observaciones?`<div class="row-observation"><strong>Observación:</strong> ${escapeHtml(i.observaciones)}</div>`:""}<div class="meta"><span class="pill ${visited?"ok":"pending"}">${visited?"Visitado":"Pendiente"}</span>${i.creadoPor?`<span class="pill">Cargado por: ${escapeHtml(i.creadoPor)}</span>`:""}<span class="pill">${escapeHtml(fmtDate(i.creadoEn))}</span></div></div><div class="row-actions"><button class="btn ${visited?"btn-warn":"btn-ok"}" data-action="toggle">${visited?"↩ Pendiente":"✓ Visitado"}</button><button class="btn btn-soft" data-action="edit">Editar</button><button class="btn btn-danger" data-action="delete">Eliminar</button></div></article>`}).join("");
+    }
+
+    function resetAdminForm(){$("adminForm").reset();$("editId").value="";$("adminStatus").value="pendiente";$("adminFormTitle").textContent="Agregar comercio";$("adminSaveBtn").textContent="Guardar comercio";$("cancelEditBtn").classList.add("hidden")}
+
+    $("loginForm").addEventListener("submit",async e=>{e.preventDefault();$("loginError").classList.add("hidden");try{await signInWithEmailAndPassword(auth,$("email").value.trim(),$("password").value)}catch(err){console.error(err);$("loginError").textContent="No se pudo ingresar. Revisá el correo y la contraseña.";$("loginError").classList.remove("hidden")}});
+    $("logoutBtn").addEventListener("click",()=>signOut(auth));
+
+    onAuthStateChanged(auth,user=>{
+      if(state.unsubscribe){state.unsubscribe();state.unsubscribe=null}
+      state.items=[];
+      if(!user){$("appView").classList.add("hidden");$("loginView").classList.remove("hidden");return}
+      state.isAdmin=user.uid===ADMIN_UID;
+      $("loginView").classList.add("hidden");$("appView").classList.remove("hidden");$("userEmail").textContent=user.email||"Usuario";$("roleLabel").textContent=state.isAdmin?"Administrador":"Equipo";
+      $("adminView").classList.toggle("hidden",!state.isAdmin);$("employeeView").classList.toggle("hidden",state.isAdmin);
+      if(state.isAdmin){
+        const q=query(commercesRef,orderBy("creadoEn","desc"));
+        state.unsubscribe=onSnapshot(q,snap=>{state.items=snap.docs.map(d=>({id:d.id,...d.data()}));$("syncStatus").textContent=`Sincronizado · ${state.items.length} registros · ${new Date().toLocaleTimeString("es-AR",{hour:"2-digit",minute:"2-digit"})}`;renderAdmin()},err=>{$("syncStatus").textContent="No se pudo leer la base.";console.error(err)});
+      }
+    });
+
+    $("employeeForm").addEventListener("submit",async e=>{
+      e.preventDefault();
+      const nombre=$("employeeName").value.trim(), direccion=$("employeeAddress").value.trim(), estado=$("employeeStatus").value, observaciones=$("employeeObservations").value.trim();
+      if(!nombre||!direccion)return;
+      $("employeeSaveBtn").disabled=true;$("employeeSaveBtn").textContent="Guardando…";
+      try{
+        const user=auth.currentUser, now=new Date().toISOString();
+        const payload={nombre,direccion,estado,observaciones,creadoEn:serverTimestamp(),actualizadoEn:serverTimestamp(),creadoPor:user?.email||"",creadoPorUid:user?.uid||""};
+        const created=await addDoc(commercesRef,payload);
+        await mirrorToSheet({action:"upsert",record:backupRecord(created.id,{...payload,creadoEn:now,actualizadoEn:now})});
+        $("lastAddedName").textContent=nombre;$("lastAddedAddress").textContent=direccion;
+        const sp=$("lastAddedStatus");sp.textContent=statusLabel(estado);sp.className="status-pill"+(estado==="visitado"?" visitado":"");
+        const obs=$("lastAddedObservation");if(observaciones){obs.textContent="Observación: "+observaciones;obs.classList.remove("hidden")}else{obs.textContent="";obs.classList.add("hidden")}
+        $("lastAdded").classList.remove("hidden");$("employeeForm").reset();$("employeeStatus").value="pendiente";toast("Comercio agregado correctamente");
+      }catch(err){console.error(err);toast("No se pudo agregar el comercio.")}
+      finally{$("employeeSaveBtn").disabled=false;$("employeeSaveBtn").textContent="Agregar comercio"}
+    });
+
+    $("adminForm").addEventListener("submit",async e=>{
+      e.preventDefault();
+      const nombre=$("adminName").value.trim(),direccion=$("adminAddress").value.trim(),estado=$("adminStatus").value,observaciones=$("adminObservations").value.trim();if(!nombre||!direccion)return;
+      try{
+        const id=$("editId").value,user=auth.currentUser,now=new Date().toISOString();
+        if(id){
+          const old=state.items.find(i=>i.id===id)||{};
+          const changes={nombre,direccion,estado,observaciones,actualizadoEn:serverTimestamp(),actualizadoPor:user?.email||""};
+          await updateDoc(doc(db,"comercios",id),changes);
+          await mirrorToSheet({action:"upsert",record:backupRecord(id,{...old,...changes,actualizadoEn:now})});
+          toast("Comercio actualizado");
+        }else{
+          const payload={nombre,direccion,estado,observaciones,creadoEn:serverTimestamp(),actualizadoEn:serverTimestamp(),creadoPor:user?.email||"",creadoPorUid:user?.uid||""};
+          const created=await addDoc(commercesRef,payload);
+          await mirrorToSheet({action:"upsert",record:backupRecord(created.id,{...payload,creadoEn:now,actualizadoEn:now})});
+          toast("Comercio agregado");
+        }
+        resetAdminForm();
+      }catch(err){console.error(err);toast("No se pudo guardar el comercio.")}
+    });
+    $("cancelEditBtn").addEventListener("click",resetAdminForm);$("search").addEventListener("input",renderAdmin);$("filterStatus").addEventListener("change",renderAdmin);
+
+    $("list").addEventListener("click",async e=>{
+      const btn=e.target.closest("button[data-action]");if(!btn)return;const row=btn.closest("[data-id]");const id=row?.dataset.id;const item=state.items.find(i=>i.id===id);if(!item)return;
+      try{
+        if(btn.dataset.action==="edit"){$("editId").value=id;$("adminName").value=item.nombre||"";$("adminAddress").value=item.direccion||"";$("adminStatus").value=item.estado||"pendiente";$("adminObservations").value=item.observaciones||"";$("adminFormTitle").textContent="Editar comercio";$("adminSaveBtn").textContent="Guardar cambios";$("cancelEditBtn").classList.remove("hidden");window.scrollTo({top:0,behavior:"smooth"})}
+        if(btn.dataset.action==="toggle"){
+          const nuevoEstado=item.estado==="visitado"?"pendiente":"visitado", now=new Date().toISOString();
+          await updateDoc(doc(db,"comercios",id),{estado:nuevoEstado,actualizadoEn:serverTimestamp(),actualizadoPor:auth.currentUser?.email||""});
+          await mirrorToSheet({action:"upsert",record:backupRecord(id,{...item,estado:nuevoEstado,actualizadoEn:now,actualizadoPor:auth.currentUser?.email||""})});
+        }
+        if(btn.dataset.action==="delete"){
+          if(!confirm(`¿Eliminar “${item.nombre}”?`))return;
+          await deleteDoc(doc(db,"comercios",id));
+          await mirrorToSheet({action:"delete",id});
+          toast("Comercio eliminado");
+        }
+      }catch(err){console.error(err);toast("No se pudo completar la acción.")}
+    });
+
+    $("exportBtn").addEventListener("click",()=>{
+      const rows=state.items.map(i=>({"ID Firebase":i.id,"Nombre del comercio":i.nombre||"","Dirección":i.direccion||"","Estado":statusLabel(i.estado),"Observaciones":i.observaciones||"","Cargado por":i.creadoPor||"","Fecha de carga":fmtDate(i.creadoEn),"Última actualización":fmtDate(i.actualizadoEn),"Actualizado por":i.actualizadoPor||""}));
+      const ws=XLSX.utils.json_to_sheet(rows);ws["!cols"]=[{wch:22},{wch:30},{wch:38},{wch:14},{wch:45},{wch:30},{wch:22},{wch:22},{wch:30}];const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,"Comercios");XLSX.writeFile(wb,`backup_comercios_${new Date().toISOString().slice(0,10)}.xlsx`)
+    });
+
+    $("backupBtn").addEventListener("click",async()=>{
+      if(!GOOGLE_SHEETS_BACKUP_URL){toast("El backup automático a Google Sheets todavía no está conectado.");return}
+      try{
+        const records=state.items.map(i=>backupRecord(i.id,{...i,creadoEn:fmtDate(i.creadoEn),actualizadoEn:fmtDate(i.actualizadoEn)}));
+        await mirrorToSheet({action:"sync_all",records});toast(`Backup enviado: ${records.length} registros`)
+      }catch(err){console.error(err);toast("No se pudo enviar el backup.")}
+    });
+  </script>
+</body>
+</html>
