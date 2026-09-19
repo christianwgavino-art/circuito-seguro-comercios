@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Seguimiento de Comercios</title>
+  <meta name="theme-color" content="#0f172a" />
+  <style>
+    :root {
+      --bg:#f4f7fb; --panel:#ffffff; --ink:#172033; --muted:#68758b;
+      --line:#dfe5ee; --primary:#0f62fe; --primary-dark:#0b4fc8;
+      --ok:#178c53; --warn:#c47a08; --danger:#c43838; --navy:#0f172a;
+      --shadow:0 12px 32px rgba(15,23,42,.08); --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    button,input,select,textarea{font:inherit}
+    button{cursor:pointer}
+    .hidden{display:none!important}
+    .app{max-width:1180px;margin:0 auto;padding:20px}
+    .topbar{background:linear-gradient(135deg,#0f172a,#1f3a63);color:#fff;border-radius:22px;padding:22px 24px;display:flex;gap:20px;align-items:center;justify-content:space-between;box-shadow:var(--shadow)}
+    .brand h1{margin:0 0 5px;font-size:clamp(22px,3vw,31px)}
+    .brand p{margin:0;color:#cbd5e1;font-size:14px}
+    .userbox{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+    .useremail{font-size:13px;color:#dbe7f7}
+    .btn{border:0;border-radius:12px;padding:11px 14px;font-weight:750;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:.18s ease}
+    .btn:hover{transform:translateY(-1px)}
+    .btn-primary{background:var(--primary);color:white}.btn-primary:hover{background:var(--primary-dark)}
+    .btn-light{background:#fff;color:var(--navy)}
+    .btn-soft{background:#eaf2ff;color:#124ea1}
+    .btn-ok{background:#e8f7ef;color:#146b42}
+    .btn-warn{background:#fff4df;color:#946006}
+    .btn-danger{background:#ffeded;color:#9f2c2c}
+    .btn-ghost{background:transparent;color:inherit;border:1px solid currentColor}
+    .grid-kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:18px 0}
+    .kpi{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:0 6px 20px rgba(15,23,42,.04)}
+    .kpi .label{color:var(--muted);font-size:13px;font-weight:700}.kpi .value{font-size:31px;font-weight:850;margin-top:3px}
+    .progress-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;margin-bottom:18px}
+    .progress-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:9px}.progress-head strong{font-size:15px}.progress-head span{font-weight:850}
+    .track{height:13px;background:#e8edf4;border-radius:99px;overflow:hidden}.bar{height:100%;width:0;background:linear-gradient(90deg,#1c9c61,#50c987);transition:width .35s ease}
+    .layout{display:grid;grid-template-columns:360px 1fr;gap:18px;align-items:start}
+    .panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:0 7px 24px rgba(15,23,42,.04)}
+    .panel-head{padding:18px 18px 0}.panel-head h2{margin:0;font-size:18px}.panel-head p{margin:6px 0 0;color:var(--muted);font-size:13px}
+    .form{padding:16px 18px 18px;display:grid;gap:13px}
+    .field{display:grid;gap:6px}.field label{font-weight:750;font-size:13px}.field input,.field select,.field textarea{width:100%;border:1px solid #ccd5e2;background:#fff;border-radius:11px;padding:11px 12px;outline:none}.field input:focus,.field select:focus,.field textarea:focus{border-color:#6ea0ff;box-shadow:0 0 0 3px rgba(15,98,254,.1)}
+    .field textarea{min-height:82px;resize:vertical}
+    .form-actions{display:grid;grid-template-columns:1fr auto;gap:8px}.form-actions .btn{min-height:44px}
+    .toolbar{padding:16px;display:grid;grid-template-columns:1fr 170px auto auto;gap:9px;border-bottom:1px solid var(--line)}
+    .toolbar input,.toolbar select{border:1px solid #ccd5e2;border-radius:11px;padding:10px 11px;min-width:0;background:#fff}
+    .list{padding:10px 14px 16px;display:grid;gap:10px}
+    .empty{padding:44px 20px;text-align:center;color:var(--muted)}
+    .row{border:1px solid var(--line);border-radius:14px;padding:14px;display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;background:#fff}
+    .row:hover{border-color:#bec9d8}.row-title{font-weight:850;font-size:16px}.row-address{color:#56657b;font-size:14px;margin-top:3px}.meta{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}.pill{font-size:12px;font-weight:750;border-radius:99px;padding:5px 8px;background:#f0f3f7;color:#536075}.pill.ok{background:#e7f7ef;color:#126a40}.pill.pending{background:#fff1da;color:#8d5b02}
+    .row-actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}.row-actions .btn{padding:8px 10px;font-size:12px}
+    .sync{font-size:12px;color:var(--muted);padding:0 16px 14px}
+    .login-wrap{min-height:100vh;display:grid;place-items:center;padding:22px;background:radial-gradient(circle at top,#dfeaff,#f7f9fc 48%,#eef3f9)}
+    .login{width:min(430px,100%);background:#fff;border:1px solid var(--line);border-radius:22px;padding:26px;box-shadow:var(--shadow)}
+    .login h1{margin:0 0 8px;font-size:26px}.login p{margin:0 0 20px;color:var(--muted);font-size:14px}.login .form{padding:0}.error{background:#ffefef;color:#9e3030;padding:10px 12px;border-radius:10px;font-size:13px}
+    .toast{position:fixed;right:18px;bottom:18px;max-width:min(420px,calc(100vw - 36px));padding:12px 14px;border-radius:12px;background:#0f172a;color:#fff;box-shadow:var(--shadow);font-size:14px;z-index:1000}
+    .small-note{font-size:12px;color:var(--muted);line-height:1.45}
+    @media (max-width:900px){.grid-kpi{grid-template-columns:repeat(2,1fr)}.layout{grid-template-columns:1fr}.toolbar{grid-template-columns:1fr 1fr}.toolbar .btn{width:100%}.userbox{justify-content:flex-start}.topbar{align-items:flex-start;flex-direction:column}}
+    @media (max-width:600px){.app{padding:10px}.topbar{border-radius:16px;padding:18px}.grid-kpi{gap:8px;margin:10px 0}.kpi{padding:13px}.kpi .value{font-size:26px}.toolbar{grid-template-columns:1fr}.row{grid-template-columns:1fr}.row-actions{justify-content:stretch}.row-actions .btn{flex:1}.form-actions{grid-template-columns:1fr}.panel{border-radius:15px}}
+  </style>
+</head>
+<body>
+  <section id="loginView" class="login-wrap">
+    <div class="login">
+      <h1>Seguimiento de Comercios</h1>
+      <p>Ingresá con el usuario del equipo para acceder al tablero compartido.</p>
+      <form id="loginForm" class="form">
+        <div class="field"><label for="email">Email</label><input id="email" type="email" autocomplete="email" required placeholder="equipo@ejemplo.com"></div>
+        <div class="field"><label for="password">Contraseña</label><input id="password" type="password" autocomplete="current-password" required placeholder="••••••••"></div>
+        <div id="loginError" class="error hidden"></div>
+        <button class="btn btn-primary" type="submit">Ingresar</button>
+      </form>
+      <p class="small-note" style="margin-top:15px">Los usuarios se crean una sola vez desde Firebase Authentication.</p>
+    </div>
+  </section>
+
+  <main id="appView" class="app hidden">
+    <header class="topbar">
+      <div class="brand">
+        <h1>Seguimiento de Comercios</h1>
+        <p>Base compartida · actualización en tiempo real · respaldo exportable</p>
+      </div>
+      <div class="userbox">
+        <span id="userEmail" class="useremail"></span>
+        <button id="syncBackupBtn" class="btn btn-light" type="button">↻ Backup</button>
+        <button id="logoutBtn" class="btn btn-ghost" type="button">Salir</button>
+      </div>
+    </header>
+
+    <section class="grid-kpi">
+      <div class="kpi"><div class="label">Total cargados</div><div id="kpiTotal" class="value">0</div></div>
+      <div class="kpi"><div class="label">Visitados</div><div id="kpiVisited" class="value">0</div></div>
+      <div class="kpi"><div class="label">Pendientes</div><div id="kpiPending" class="value">0</div></div>
+      <div class="kpi"><div class="label">Avance</div><div id="kpiPercent" class="value">0%</div></div>
+    </section>
+
+    <section class="progress-card">
+      <div class="progress-head"><strong>Progreso general</strong><span id="progressText">0 de 0</span></div>
+      <div class="track"><div id="progressBar" class="bar"></div></div>
+    </section>
+
+    <section class="layout">
+      <aside class="panel">
+        <div class="panel-head"><h2 id="formTitle">Agregar comercio</h2><p>Cargá el nombre, dirección y datos útiles para la recorrida.</p></div>
+        <form id="commerceForm" class="form">
+          <input id="editId" type="hidden">
+          <div class="field"><label for="name">Nombre del comercio *</label><input id="name" required maxlength="120" placeholder="Ej.: Kiosco San Martín"></div>
+          <div class="field"><label for="address">Dirección *</label><input id="address" required maxlength="180" placeholder="Ej.: Av. Centenario 2314"></div>
+          <div class="field"><label for="zone">Zona / barrio</label><input id="zone" maxlength="100" placeholder="Ej.: Beccar"></div>
+          <div class="field"><label for="responsible">Responsable / relevador</label><input id="responsible" maxlength="120" placeholder="Ej.: Juan Pérez"></div>
+          <div class="field"><label for="status">Estado</label><select id="status"><option value="pendiente">Pendiente</option><option value="visitado">Visitado</option></select></div>
+          <div class="field"><label for="notes">Observaciones</label><textarea id="notes" maxlength="600" placeholder="Ej.: Volver por la tarde / hablar con el dueño"></textarea></div>
+          <div class="form-actions">
+            <button id="saveBtn" class="btn btn-primary" type="submit">Guardar comercio</button>
+            <button id="cancelEditBtn" class="btn btn-soft hidden" type="button">Cancelar</button>
+          </div>
+        </form>
+      </aside>
+
+      <section class="panel">
+        <div class="toolbar">
+          <input id="search" type="search" placeholder="Buscar comercio o dirección…">
+          <select id="filterStatus"><option value="todos">Todos</option><option value="pendiente">Pendientes</option><option value="visitado">Visitados</option></select>
+          <button id="exportBtn" class="btn btn-soft" type="button">⬇ Excel</button>
+          <button id="refreshBtn" class="btn btn-soft" type="button">Actualizar</button>
+        </div>
+        <div id="list" class="list"></div>
+        <div id="syncStatus" class="sync">Conectando con Firebase…</div>
+      </section>
+    </section>
+  </main>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+  <script type="module">
+    // =========================================================
+    // 1) PEGÁ AQUÍ LA CONFIGURACIÓN DE TU PROYECTO FIREBASE
+    // Firebase Console > Project settings > Your apps > Web app
+    // =========================================================
+    const firebaseConfig = {
+      apiKey: "REEMPLAZAR_API_KEY",
+      authDomain: "REEMPLAZAR.firebaseapp.com",
+      projectId: "REEMPLAZAR_PROJECT_ID",
+      storageBucket: "REEMPLAZAR.firebasestorage.app",
+      messagingSenderId: "REEMPLAZAR_SENDER_ID",
+      appId: "REEMPLAZAR_APP_ID"
+    };
+
+    // =========================================================
+    // 2) OPCIONAL: URL DEL WEB APP DE GOOGLE APPS SCRIPT
+    // Si queda vacío, Firebase seguirá funcionando y el botón
+    // "Excel" permitirá descargar el backup manualmente.
+    // =========================================================
+    const GOOGLE_SHEETS_BACKUP_URL = "";
+
+    const FIREBASE_VERSION = "12.19.0";
+    const { initializeApp } = await import(`https://www.gstatic.com/firebasejs/${FIREBASE_VERSION}/firebase-app.js`);
+    const { getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, onSnapshot, serverTimestamp, query, orderBy, getDocs } = await import(`https://www.gstatic.com/firebasejs/${FIREBASE_VERSION}/firebase-firestore.js`);
+    const { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } = await import(`https://www.gstatic.com/firebasejs/${FIREBASE_VERSION}/firebase-auth.js`);
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+    const commercesRef = collection(db, "comercios");
+
+    const $ = (id) => document.getElementById(id);
+    const state = { items: [], unsubscribe: null };
+
+    function toast(message) {
+      const el = $("toast"); el.textContent = message; el.classList.remove("hidden");
+      clearTimeout(window.__toastTimer); window.__toastTimer = setTimeout(() => el.classList.add("hidden"), 2800);
+    }
+
+    function normalize(value) { return (value || "").toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); }
+    function fmtDate(ts) {
+      if (!ts) return "—";
+      const d = ts?.toDate ? ts.toDate() : new Date(ts);
+      return Number.isNaN(d.getTime()) ? "—" : d.toLocaleString("es-AR", { dateStyle:"short", timeStyle:"short" });
+    }
+    function escapeHtml(value="") {
+      return value.toString().replace(/[&<>'"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
+    }
+
+    function filteredItems() {
+      const text = normalize($("search").value.trim());
+      const filter = $("filterStatus").value;
+      return state.items.filter(i => {
+        const matchesText = !text || [i.nombre, i.direccion, i.zona, i.responsable, i.observaciones].some(v => normalize(v).includes(text));
+        const matchesStatus = filter === "todos" || i.estado === filter;
+        return matchesText && matchesStatus;
+      });
+    }
+
+    function render() {
+      const total = state.items.length;
+      const visited = state.items.filter(i => i.estado === "visitado").length;
+      const pending = total - visited;
+      const percent = total ? Math.round((visited / total) * 100) : 0;
+      $("kpiTotal").textContent = total; $("kpiVisited").textContent = visited; $("kpiPending").textContent = pending; $("kpiPercent").textContent = `${percent}%`;
+      $("progressText").textContent = `${visited} de ${total}`; $("progressBar").style.width = `${percent}%`;
+
+      const items = filteredItems();
+      if (!items.length) {
+        $("list").innerHTML = `<div class="empty">No hay comercios para mostrar.</div>`;
+        return;
+      }
+      $("list").innerHTML = items.map(item => {
+        const visited = item.estado === "visitado";
+        return `<article class="row" data-id="${item.id}">
+          <div>
+            <div class="row-title">${escapeHtml(item.nombre)}</div>
+            <div class="row-address">${escapeHtml(item.direccion)}</div>
+            <div class="meta">
+              <span class="pill ${visited ? "ok" : "pending"}">${visited ? "Visitado" : "Pendiente"}</span>
+              ${item.zona ? `<span class="pill">${escapeHtml(item.zona)}</span>` : ""}
+              ${item.responsable ? `<span class="pill">Responsable: ${escapeHtml(item.responsable)}</span>` : ""}
+              <span class="pill">Actualizado: ${escapeHtml(fmtDate(item.actualizadoEn || item.creadoEn))}</span>
+            </div>
+            ${item.observaciones ? `<div class="row-address" style="margin-top:8px">${escapeHtml(item.observaciones)}</div>` : ""}
+          </div>
+          <div class="row-actions">
+            <button class="btn ${visited ? "btn-warn" : "btn-ok"}" data-action="toggle">${visited ? "↩ Pendiente" : "✓ Visitado"}</button>
+            <button class="btn btn-soft" data-action="edit">Editar</button>
+            <button class="btn btn-danger" data-action="delete">Eliminar</button>
+          </div>
+        </article>`;
+      }).join("");
+    }
+
+    function resetForm() {
+      $("commerceForm").reset(); $("editId").value = ""; $("formTitle").textContent = "Agregar comercio"; $("saveBtn").textContent = "Guardar comercio"; $("cancelEditBtn").classList.add("hidden"); $("status").value = "pendiente";
+    }
+
+    async function mirrorToSheet(payload) {
+      if (!GOOGLE_SHEETS_BACKUP_URL) return;
+      try {
+        await fetch(GOOGLE_SHEETS_BACKUP_URL, {
+          method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload)
+        });
+      } catch (e) { console.warn("Backup Sheets:", e); }
+    }
+
+    function serializableItem(item) {
+      return {
+        id: item.id, nombre: item.nombre || "", direccion: item.direccion || "", zona: item.zona || "", responsable: item.responsable || "", estado: item.estado || "pendiente", observaciones: item.observaciones || "",
+        creadoPor: item.creadoPor || "", actualizadoPor: item.actualizadoPor || "", creadoEn: fmtDate(item.creadoEn), actualizadoEn: fmtDate(item.actualizadoEn)
+      };
+    }
+
+    $("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault(); $("loginError").classList.add("hidden");
+      try { await signInWithEmailAndPassword(auth, $("email").value.trim(), $("password").value); }
+      catch (err) { $("loginError").textContent = "No se pudo ingresar. Revisá email y contraseña."; $("loginError").classList.remove("hidden"); console.error(err); }
+    });
+
+    $("logoutBtn").addEventListener("click", () => signOut(auth));
+
+    onAuthStateChanged(auth, user => {
+      if (state.unsubscribe) { state.unsubscribe(); state.unsubscribe = null; }
+      if (!user) { $("appView").classList.add("hidden"); $("loginView").classList.remove("hidden"); return; }
+      $("loginView").classList.add("hidden"); $("appView").classList.remove("hidden"); $("userEmail").textContent = user.email || "Usuario";
+      const q = query(commercesRef, orderBy("creadoEn", "desc"));
+      state.unsubscribe = onSnapshot(q, snap => {
+        state.items = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+        $("syncStatus").textContent = `Sincronizado · ${state.items.length} registros · ${new Date().toLocaleTimeString("es-AR", {hour:"2-digit", minute:"2-digit"})}`;
+        render();
+      }, err => { $("syncStatus").textContent = "Error de conexión con Firebase"; console.error(err); });
+    });
+
+    $("commerceForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const payload = {
+        nombre: $("name").value.trim(), direccion: $("address").value.trim(), zona: $("zone").value.trim(), responsable: $("responsible").value.trim(), estado: $("status").value, observaciones: $("notes").value.trim(), actualizadoEn: serverTimestamp(), actualizadoPor: auth.currentUser?.email || ""
+      };
+      try {
+        const editId = $("editId").value;
+        if (editId) {
+          await updateDoc(doc(db, "comercios", editId), payload);
+          await mirrorToSheet({ action:"upsert", record:{ id:editId, ...payload, actualizadoEn:new Date().toISOString() } });
+          toast("Comercio actualizado");
+        } else {
+          const created = await addDoc(commercesRef, { ...payload, creadoEn:serverTimestamp(), creadoPor:auth.currentUser?.email || "" });
+          await mirrorToSheet({ action:"upsert", record:{ id:created.id, ...payload, creadoPor:auth.currentUser?.email || "", creadoEn:new Date().toISOString(), actualizadoEn:new Date().toISOString() } });
+          toast("Comercio agregado");
+        }
+        resetForm();
+      } catch (err) { console.error(err); toast("No se pudo guardar. Revisá la conexión."); }
+    });
+
+    $("cancelEditBtn").addEventListener("click", resetForm);
+    $("search").addEventListener("input", render); $("filterStatus").addEventListener("change", render); $("refreshBtn").addEventListener("click", render);
+
+    $("list").addEventListener("click", async (e) => {
+      const btn = e.target.closest("button[data-action]"); if (!btn) return;
+      const row = btn.closest("[data-id]"); const id = row.dataset.id; const item = state.items.find(i => i.id === id); if (!item) return;
+      const action = btn.dataset.action;
+      if (action === "edit") {
+        $("editId").value = id; $("name").value = item.nombre || ""; $("address").value = item.direccion || ""; $("zone").value = item.zona || ""; $("responsible").value = item.responsable || ""; $("status").value = item.estado || "pendiente"; $("notes").value = item.observaciones || "";
+        $("formTitle").textContent = "Editar comercio"; $("saveBtn").textContent = "Guardar cambios"; $("cancelEditBtn").classList.remove("hidden"); window.scrollTo({ top:0, behavior:"smooth" });
+      }
+      if (action === "toggle") {
+        const next = item.estado === "visitado" ? "pendiente" : "visitado";
+        await updateDoc(doc(db,"comercios",id), { estado:next, actualizadoEn:serverTimestamp(), actualizadoPor:auth.currentUser?.email || "" });
+        await mirrorToSheet({ action:"upsert", record:{ ...serializableItem(item), estado:next, actualizadoPor:auth.currentUser?.email || "", actualizadoEn:new Date().toISOString() } });
+      }
+      if (action === "delete") {
+        if (!confirm(`¿Eliminar “${item.nombre}”?`)) return;
+        await deleteDoc(doc(db,"comercios",id)); await mirrorToSheet({ action:"delete", id }); toast("Comercio eliminado");
+      }
+    });
+
+    $("syncBackupBtn").addEventListener("click", async () => {
+      if (!GOOGLE_SHEETS_BACKUP_URL) { toast("Primero configurá la URL de Google Sheets en el HTML."); return; }
+      try {
+        const snap = await getDocs(query(commercesRef, orderBy("creadoEn","desc")));
+        const records = snap.docs.map(d => serializableItem({id:d.id,...d.data()}));
+        await mirrorToSheet({ action:"sync_all", records }); toast(`Backup enviado: ${records.length} registros`);
+      } catch (e) { console.error(e); toast("No se pudo sincronizar el backup."); }
+    });
+
+    $("exportBtn").addEventListener("click", () => {
+      const rows = state.items.map(i => ({
+        "ID Firebase": i.id,
+        "Nombre del comercio": i.nombre || "",
+        "Dirección": i.direccion || "",
+        "Zona / barrio": i.zona || "",
+        "Responsable / relevador": i.responsable || "",
+        "Estado": i.estado === "visitado" ? "Visitado" : "Pendiente",
+        "Observaciones": i.observaciones || "",
+        "Creado por": i.creadoPor || "",
+        "Fecha de carga": fmtDate(i.creadoEn),
+        "Última actualización": fmtDate(i.actualizadoEn),
+        "Actualizado por": i.actualizadoPor || ""
+      }));
+      const ws = XLSX.utils.json_to_sheet(rows);
+      ws["!cols"] = [{wch:24},{wch:28},{wch:34},{wch:18},{wch:24},{wch:13},{wch:38},{wch:28},{wch:21},{wch:21},{wch:28}];
+      const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Comercios");
+      XLSX.writeFile(wb, `backup_comercios_${new Date().toISOString().slice(0,10)}.xlsx`);
+    });
+  </script>
+</body>
+</html>
